@@ -5,7 +5,7 @@ export const SITE = {
   email: 'darellorlandoe@gmail.com',
   github: 'https://github.com/Darell12',
   linkedin: 'https://linkedin.com/in/darellestren',
-  domain: 'darellorlandoe.dev',
+  domain: 'darell.co',
 } as const;
 
 export const LOCALES = ['en', 'es'] as const;

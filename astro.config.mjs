@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://yourdomain.com',
+  site: 'https://darell.co',
   output: 'static',
   i18n: {
     defaultLocale: 'en',
