@@ -3,12 +3,18 @@ interface Props {
   issuer: string;
   name: string;
   date: string;
+  status?: string;
   credentialUrl?: string;
 }
 
-const { issuer, name, date, credentialUrl } = Astro.props;
+const { issuer, name, date, status, credentialUrl } = Astro.props;
+
+const isInProgress = status === 'in-progress' || date === 'En preparación' || date === 'In progress';
 
 function formatDate(dateStr: string): string {
+  if (dateStr.includes('En preparación') || dateStr.includes('In progress')) {
+    return dateStr;
+  }
   const [year, month] = dateStr.split('-');
   const d = new Date(parseInt(year), parseInt(month) - 1);
   return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
@@ -23,6 +29,9 @@ function formatDate(dateStr: string): string {
     </div>
     <time class="card-date">{formatDate(date)}</time>
   </div>
+  {isInProgress && (
+    <span class="in-progress-badge">En preparación</span>
+  )}
 
   {credentialUrl && (
     <a
@@ -83,6 +92,19 @@ function formatDate(dateStr: string): string {
 
   .credential-link:hover {
     color: var(--color-fg);
+  }
+
+  .in-progress-badge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--color-bg);
+    color: var(--color-fg-muted);
+    border: 1px solid var(--color-border);
+    align-self: flex-start;
   }
 
   @media (max-width: 768px) {
