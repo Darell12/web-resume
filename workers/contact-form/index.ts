@@ -11,10 +11,9 @@ interface ContactFormData {
   message: string;
 }
 
-const DISCORD_WEBHOOK_URL = DISCORD_WEBHOOK_URL;
-
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: { DISCORD_WEBHOOK_URL: string }): Promise<Response> {
+    const DISCORD_WEBHOOK_URL = env.DISCORD_WEBHOOK_URL;
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, {

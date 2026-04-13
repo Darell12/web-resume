@@ -3,4 +3,4 @@ main = "index.ts"
 compatibility_date = "2024-01-01"
 
 [vars]
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1493318866883969037/Bl6DczQa1XVZkilC6CVgbPCkKSXTxAlXngCoi8oHh4pTX6GAjV5w75oZnDrtqKZVJ5bf"
+DISCORD_WEBHOOK_URL = ""  # Set via: wrangler secret put DISCORD_WEBHOOK_URL

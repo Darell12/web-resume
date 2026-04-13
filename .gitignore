@@ -6,3 +6,6 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Cloudflare Workers secrets (local only)
+workers/**/wrangler.toml
