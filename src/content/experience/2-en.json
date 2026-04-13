@@ -1,0 +1,11 @@
+{
+  "company": "Mangus S.A.S",
+  "role": "QA/Tester",
+  "startDate": "2021-01",
+  "endDate": "2023-01",
+  "description": [
+    "Ensured product stability through rigorous testing, reducing production errors.",
+    "Acted as technical liaison between support and development to refine requirements and reduce rework."
+  ],
+  "tech": ["Testing", "QA", "Bug Tracking"]
+}

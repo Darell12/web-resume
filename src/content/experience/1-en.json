@@ -1,0 +1,13 @@
+{
+  "company": "Mangus S.A.S",
+  "role": "Semi-Senior Developer",
+  "startDate": "2023-01",
+  "endDate": "2026-01",
+  "description": [
+    "Led the front-end migration to current Angular versions, improving performance and UX.",
+    "Implemented an AWS scalability system that increased capacity from 100 to over 1500 concurrent users.",
+    "Automated repetitive processes through scripts, optimizing support for the product area and productivity.",
+    "Collaborated with the DBA team in normalizing designs and generating complex reports."
+  ],
+  "tech": ["Angular", "TypeScript", "AWS", "PostgreSQL", "Python"]
+}

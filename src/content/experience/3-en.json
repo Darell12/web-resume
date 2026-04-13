@@ -1,0 +1,10 @@
+{
+  "company": "Mangus S.A.S",
+  "role": "Junior Developer",
+  "startDate": "2019-01",
+  "endDate": "2021-01",
+  "description": [
+    "Integrated open-source technologies like BigBlueButton and Jellyfin to add value to the streaming and meetings platform."
+  ],
+  "tech": ["JavaScript", "BigBlueButton", "Jellyfin", "Streaming"]
+}

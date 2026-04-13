@@ -1,0 +1,178 @@
+---
+import { getLocaleFromUrl, useTranslations } from '../utils/i18n';
+import { SITE } from '../utils/consts';
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
+
+const summaries = {
+  en: [
+    'Software Developer with experience in front-end and back-end for web and mobile applications.',
+    'Expert in research and implementation of new technologies to optimize performance and workflows.',
+  ],
+  es: [
+    'Desarrollador de Software con experiencia en front-end y back-end para aplicaciones web y móviles.',
+    'Experto en investigación e implementación de nuevas tecnologías para optimizar el rendimiento y flujos de trabajo.',
+  ],
+};
+
+const summary = summaries[locale] || summaries.en;
+---
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-photo">
+        <img
+          src="/photos/perfil.jpg"
+          alt={SITE.name}
+          width="140"
+          height="140"
+        />
+      </div>
+
+      <div class="hero-content">
+        <h1 class="hero-name">{SITE.name}</h1>
+        <p class="hero-title">{SITE.title}</p>
+        <div class="hero-summary">
+          {summary.map((line) => (
+            <p class="summary-line">{line}</p>
+          ))}
+        </div>
+        <div class="hero-meta">
+          <span class="hero-location">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Soledad, Atlántico, Colombia
+          </span>
+          <a href={`mailto:${SITE.email}`} class="hero-email">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            {SITE.email}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--header-height) 0 var(--space-lg) 0;
+    background: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xl);
+  }
+
+  .hero-photo {
+    flex-shrink: 0;
+  }
+
+  .hero-photo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    border: 2px solid var(--color-border);
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .hero-name {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .hero-title {
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .summary-line {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-fg-muted);
+    margin: 0;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
+  }
+
+  .hero-location,
+  .hero-email {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .hero-location:hover,
+  .hero-email:hover {
+    color: var(--color-fg);
+  }
+
+  .hero-email {
+    color: var(--color-fg);
+  }
+
+  @media (max-width: 640px) {
+    .hero-inner {
+      flex-direction: column;
+      text-align: center;
+      gap: var(--space-lg);
+    }
+
+    .hero-photo img {
+      width: 100px;
+      height: 100px;
+    }
+
+    .hero-meta {
+      justify-content: center;
+    }
+
+    .hero-name {
+      font-size: var(--text-xl);
+    }
+
+    .hero-summary {
+      text-align: left;
+    }
+  }
+</style>

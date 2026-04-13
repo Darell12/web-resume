@@ -1,0 +1,7 @@
+{
+  "title": "DevPortfolio",
+  "description": "Template de portafolio open-source basado en Astro con soporte i18n, optimización SEO y animaciones. Cuenta con sistema de componentes modulares y Content Collections.",
+  "tech": ["Astro", "TypeScript", "CSS"],
+  "githubUrl": "https://github.com/yourusername/devportfolio",
+  "featured": false
+}

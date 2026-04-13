@@ -1,0 +1,20 @@
+{
+  "name": "web-resume",
+  "version": "1.0.0",
+  "description": "Personal portfolio built with Astro + TypeScript + Cloudflare Pages",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^6.0.5",
+    "astro-seo": "^1.1.0",
+    "@astrojs/sitemap": "^3.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  }
+}

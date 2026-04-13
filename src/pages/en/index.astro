@@ -1,0 +1,150 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Section from '../../components/Section.astro';
+import Hero from '../../components/Hero.astro';
+import ExperienceCard from '../../components/ExperienceCard.astro';
+import EducationCard from '../../components/EducationCard.astro';
+import SkillsSection from '../../components/SkillsSection.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CertificationCard from '../../components/CertificationCard.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import { useTranslations } from '../../utils/i18n';
+
+const locale = 'en';
+const t = useTranslations(locale);
+
+const experienceEntries = await getCollection('experience');
+const educationEntries = await getCollection('education');
+const skillsEntries = await getCollection('skills');
+const projectsEntries = await getCollection('projects');
+const certificationsEntries = await getCollection('certifications');
+const metaEntries = await getCollection('meta');
+
+const experienceData = experienceEntries
+  .filter(e => e.id.endsWith(`-${locale}`))
+  .sort((a, b) => a.id.localeCompare(b.id));
+
+const educationData = educationEntries
+  .filter(e => e.id.endsWith(`-${locale}`))
+  .sort((a, b) => a.id.localeCompare(b.id));
+
+const skillsData = skillsEntries
+  .filter(s => s.id.endsWith(`-${locale}`))
+  .map(s => s.data);
+
+const projectsData = projectsEntries
+  .filter(p => p.id.endsWith(`-${locale}`))
+  .sort((a, b) => a.id.localeCompare(b.id));
+
+const certificationsData = certificationsEntries
+  .filter(c => c.id.endsWith(`-${locale}`))
+  .sort((a, b) => a.id.localeCompare(b.id));
+
+const metaData = metaEntries.find(m => m.id.endsWith(`-${locale}`));
+---
+
+<BaseLayout
+  title={metaData?.data.title}
+  description={metaData?.data.description}
+  ogImage={metaData?.data.ogImage}
+>
+  <Header slot="header">
+    <LanguageSwitcher slot="language-switcher" />
+  </Header>
+
+  <main>
+    <Hero />
+
+    <Section id="experience" title={t('section.experience')}>
+      <div class="experience-list">
+        {experienceData.map((entry) => (
+          <ExperienceCard
+            company={entry.data.company}
+            role={entry.data.role}
+            startDate={entry.data.startDate}
+            endDate={entry.data.endDate}
+            description={entry.data.description}
+            tech={entry.data.tech}
+          />
+        ))}
+      </div>
+    </Section>
+
+    <Section id="education" title={t('section.education')}>
+      <div class="education-list">
+        {educationData.map((entry) => (
+          <EducationCard
+            institution={entry.data.institution}
+            degree={entry.data.degree}
+            startDate={entry.data.startDate}
+            endDate={entry.data.endDate}
+            description={entry.data.description}
+          />
+        ))}
+      </div>
+    </Section>
+
+    <Section id="skills" title={t('section.skills')}>
+      <SkillsSection skills={skillsData} />
+    </Section>
+
+    <Section id="projects" title={t('section.projects')}>
+      <div class="projects-grid">
+        {projectsData.map((entry) => (
+          <ProjectCard
+            title={entry.data.title}
+            description={entry.data.description}
+            tech={entry.data.tech}
+            githubUrl={entry.data.githubUrl}
+            liveUrl={entry.data.liveUrl}
+            featured={entry.data.featured}
+          />
+        ))}
+      </div>
+    </Section>
+
+    <Section id="certifications" title={t('section.certifications')}>
+      <div class="certifications-grid">
+        {certificationsData.map((entry) => (
+          <CertificationCard
+            issuer={entry.data.issuer}
+            name={entry.data.name}
+            date={entry.data.date}
+            credentialUrl={entry.data.credentialUrl}
+          />
+        ))}
+      </div>
+    </Section>
+
+    <ContactSection />
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .experience-list,
+  .education-list {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .certifications-grid {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  main {
+    min-height: 100vh;
+  }
+</style>

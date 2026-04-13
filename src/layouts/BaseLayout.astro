@@ -1,0 +1,240 @@
+---
+import { SEO } from 'astro-seo';
+import { getLocaleFromUrl } from '../utils/i18n';
+import { SITE } from '../utils/consts';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title = SITE.name,
+  description = SITE.description,
+  ogImage = '/og-image.png',
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
+
+const locale = getLocaleFromUrl(Astro.url);
+const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <SEO
+      title={fullTitle}
+      description={description}
+      canonical={canonicalUrl}
+      openGraph={{
+        basic: {
+          title: fullTitle,
+          type: 'profile',
+          image: ogImage,
+          url: canonicalUrl,
+        },
+        optional: {
+          locale: locale === 'en' ? 'en_US' : 'es_ES',
+          siteName: SITE.name,
+        },
+      }}
+      twitter={{
+        card: 'summary_large_image',
+        title: fullTitle,
+        description: description,
+        image: ogImage,
+        imageAlt: SITE.name,
+      }}
+    />
+
+    <script is:inline>
+      // Intersection Observer for scroll animations
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+              // Apply stagger delay if data-stagger is set
+              const stagger = el.dataset.stagger;
+              if (stagger) {
+                el.style.setProperty('--stagger-delay', stagger + 'ms');
+              }
+              el.classList.add('is-visible');
+              observer.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (!mq.matches) {
+          document.querySelectorAll('[data-animate]').forEach((el) => {
+            observer.observe(el);
+          });
+        } else {
+          document.querySelectorAll('[data-animate]').forEach((el) => {
+            el.classList.add('is-visible');
+          });
+        }
+      });
+    </script>
+
+    <script is:inline>
+      // Mobile menu toggle
+      document.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.getElementById('mobile-menu-toggle');
+        const nav = document.getElementById('mobile-nav');
+        if (toggle && nav) {
+          toggle.addEventListener('click', () => {
+            nav.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', nav.classList.contains('is-open').toString());
+          });
+        }
+      });
+    </script>
+
+    <style is:global>
+      /* Header styles */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--header-height);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--color-border);
+        z-index: 100;
+      }
+
+      .header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+      }
+
+      .logo {
+        font-family: var(--font-heading);
+        font-size: var(--text-xl);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .nav-desktop {
+        display: flex;
+        align-items: center;
+        gap: var(--space-lg);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+      }
+
+      .nav-link {
+        font-size: var(--text-sm);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        color: var(--color-fg-muted);
+        transition: color var(--duration-fast) var(--ease-out);
+      }
+
+      .nav-link:hover,
+      .nav-link:focus {
+        color: var(--color-fg);
+      }
+
+      .nav-link.active {
+        color: var(--color-fg);
+      }
+
+      .language-switcher {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: var(--text-sm);
+        font-weight: 500;
+        color: var(--color-fg-muted);
+        transition: color var(--duration-fast) var(--ease-out);
+      }
+
+      .language-switcher:hover {
+        color: var(--color-fg);
+      }
+
+      .language-switcher span {
+        transition: color var(--duration-fast) var(--ease-out);
+      }
+
+      .language-switcher .is-active {
+        color: var(--color-fg);
+      }
+
+      .language-switcher .separator {
+        color: var(--color-fg-subtle);
+      }
+
+      .mobile-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        padding: var(--space-sm);
+      }
+
+      .mobile-menu-toggle span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--color-fg);
+        transition: transform var(--duration-normal) var(--ease-out);
+      }
+
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        flex-direction: column;
+        gap: var(--space-md);
+        padding: var(--space-lg);
+        background: var(--color-bg);
+        border-top: 1px solid var(--color-border);
+      }
+
+      .mobile-nav.is-open {
+        display: flex;
+      }
+
+      .mobile-nav .nav-link {
+        font-size: var(--text-lg);
+        padding: var(--space-sm) 0;
+      }
+
+      @media (max-width: 768px) {
+        .nav-desktop {
+          display: none;
+        }
+        .mobile-menu-toggle {
+          display: flex;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

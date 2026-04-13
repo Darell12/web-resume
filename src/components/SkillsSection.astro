@@ -1,0 +1,232 @@
+---
+import { getLocaleFromUrl } from '../utils/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+
+interface Skill {
+  name: string;
+  level?: 'basic' | 'intermediate' | 'advanced' | 'expert';
+  category: string;
+}
+
+interface Props {
+  skills: Skill[];
+}
+
+const { skills } = Astro.props;
+
+const levelOrder = { expert: 0, advanced: 1, intermediate: 2, basic: 3 };
+
+const levelBars: Record<string, number> = {
+  expert: 5,
+  advanced: 4,
+  intermediate: 3,
+  basic: 2,
+};
+
+const levelLabels: Record<string, Record<string, string>> = {
+  en: { expert: 'Expert', advanced: 'Advanced', intermediate: 'Intermediate', basic: 'Basic' },
+  es: { expert: 'Experto', advanced: 'Avanzado', intermediate: 'Intermedio', basic: 'Básico' },
+};
+
+const categoryLabels: Record<string, Record<string, string>> = {
+  en: {
+    'Languages': 'Languages',
+    'Databases': 'Databases',
+    'Tools & Cloud': 'Tools & Cloud',
+  },
+  es: {
+    'Lenguajes': 'Lenguajes',
+    'Bases de Datos': 'Bases de Datos',
+    'Herramientas y Cloud': 'Herramientas y Cloud',
+    'Idiomas': 'Idiomas',
+  },
+};
+
+// Group skills by category
+const grouped = skills.reduce((acc, skill) => {
+  const cat = skill.category;
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(skill);
+  return acc;
+}, {} as Record<string, Skill[]>);
+
+// Sort skills within each group by level
+Object.values(grouped).forEach(group => {
+  group.sort((a, b) => (levelOrder[a.level || 'basic'] ?? 4) - (levelOrder[b.level || 'basic'] ?? 4));
+});
+
+// Sort groups by their highest skill level
+const sortedCategories = Object.entries(grouped).sort(([, a], [, b]) => {
+  const minLevelA = Math.min(...a.map(s => levelOrder[s.level || 'basic'] ?? 4));
+  const minLevelB = Math.min(...b.map(s => levelOrder[s.level || 'basic'] ?? 4));
+  return minLevelA - minLevelB;
+});
+
+const t = (cat: string) => categoryLabels[locale]?.[cat] || cat;
+---
+
+<div class="skills-container" data-animate>
+  {sortedCategories.map(([category, categorySkills], groupIdx) => (
+    <div class="skill-category" data-animate data-stagger={groupIdx * 80}>
+      <h3 class="category-title">{t(category)}</h3>
+      <div class="skill-grid">
+        {categorySkills.map((skill, idx) => (
+          <div
+            class="skill-card"
+            data-animate
+            data-stagger={idx * 40}
+          >
+            <div class="skill-header">
+              <span class="skill-name">{skill.name}</span>
+              {skill.level && (
+                <span class="skill-level-badge">
+                  {levelLabels[locale]?.[skill.level] || skill.level}
+                </span>
+              )}
+            </div>
+            {skill.level && (
+              <div class="skill-bar" title={`${skill.name}: ${skill.level}`}>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <span
+                    class={`bar-segment ${i <= levelBars[skill.level!] ? 'is-filled' : ''}`}
+                    style={`--bar-delay: ${(i - 1) * 40}ms`}
+                  ></span>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .skills-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .skill-category {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out);
+    transition-delay: var(--stagger-delay, 0ms);
+  }
+
+  .skill-category.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .category-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    color: var(--color-fg);
+    margin: 0 0 var(--space-md) 0;
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--color-fg);
+    display: inline-block;
+  }
+
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .skill-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+    transition-delay: var(--stagger-delay, 0ms);
+  }
+
+  .skill-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .skill-card:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .skill-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .skill-name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-fg);
+  }
+
+  .skill-level-badge {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-fg-muted);
+    background: var(--color-bg-alt);
+    padding: 2px 6px;
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .skill-bar {
+    display: flex;
+    gap: 3px;
+    margin-top: auto;
+  }
+
+  .bar-segment {
+    flex: 1;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 1px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--duration-normal) var(--ease-out);
+    transition-delay: var(--bar-delay, 0ms);
+  }
+
+  .skill-card.is-visible .bar-segment.is-filled {
+    background: var(--color-fg);
+    transform: scaleX(1);
+  }
+
+  .skill-card.is-visible .bar-segment:not(.is-filled) {
+    transform: scaleX(1);
+  }
+
+  @media (max-width: 640px) {
+    .skill-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 400px) {
+    .skill-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

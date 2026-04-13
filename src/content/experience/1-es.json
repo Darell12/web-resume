@@ -1,0 +1,13 @@
+{
+  "company": "Mangus S.A.S",
+  "role": "Desarrollador Semi-Senior",
+  "startDate": "2023-01",
+  "endDate": "2026-01",
+  "description": [
+    "Lideré la migración del front-end a versiones actuales de Angular, mejorando el rendimiento y la UX.",
+    "Implementé un sistema de escalabilidad en AWS que aumentó la capacidad de 100 a más de 1500 usuarios concurrentes.",
+    "Automaticé procesos repetitivos mediante scripts, optimizando el soporte al área de producto y la productividad.",
+    "Colaboré con el equipo de DBA en la normalización de diseños y generación de reportes complejos."
+  ],
+  "tech": ["Angular", "TypeScript", "AWS", "PostgreSQL", "Python"]
+}

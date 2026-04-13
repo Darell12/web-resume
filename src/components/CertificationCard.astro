@@ -1,0 +1,93 @@
+---
+interface Props {
+  issuer: string;
+  name: string;
+  date: string;
+  credentialUrl?: string;
+}
+
+const { issuer, name, date, credentialUrl } = Astro.props;
+
+function formatDate(dateStr: string): string {
+  const [year, month] = dateStr.split('-');
+  const d = new Date(parseInt(year), parseInt(month) - 1);
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+---
+
+<article class="certification-card card">
+  <div class="card-header">
+    <div class="card-title-group">
+      <h3 class="card-title">{name}</h3>
+      <span class="card-subtitle">{issuer}</span>
+    </div>
+    <time class="card-date">{formatDate(date)}</time>
+  </div>
+
+  {credentialUrl && (
+    <a
+      href={credentialUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="credential-link"
+    >
+      View Credential
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+      </svg>
+    </a>
+  )}
+</article>
+
+<style>
+  .certification-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .card-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-xs);
+  }
+
+  .card-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .card-date {
+    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    color: var(--color-fg-muted);
+    white-space: nowrap;
+  }
+
+  .credential-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .credential-link:hover {
+    color: var(--color-fg);
+  }
+
+  @media (max-width: 768px) {
+    .card-header {
+      flex-direction: column;
+    }
+  }
+</style>

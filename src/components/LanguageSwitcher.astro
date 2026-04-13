@@ -1,0 +1,69 @@
+---
+import { getLocaleFromUrl } from '../utils/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const isSpanish = locale === 'es';
+
+const otherLocale = isSpanish ? 'en' : 'es';
+const otherLocaleLabel = isSpanish ? 'EN' : 'ES';
+const currentPath = Astro.url.pathname;
+
+function getOtherLocalePath(path: string, newLocale: string): string {
+  const cleanPath = path.replace(/^\/(en|es)/, '');
+  if (newLocale === 'en') {
+    return cleanPath || '/';
+  }
+  return `/es${cleanPath}`;
+}
+---
+
+<a
+  href={getOtherLocalePath(currentPath, otherLocale)}
+  class="language-switcher"
+  aria-label={`Switch to ${otherLocaleLabel}`}
+  data-locale={otherLocale}
+>
+  <span class={!isSpanish ? 'is-active' : ''}>EN</span>
+  <span class="separator">/</span>
+  <span class={isSpanish ? 'is-active' : ''}>ES</span>
+</a>
+
+<script>
+  document.querySelectorAll('.language-switcher').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const newLocale = link.getAttribute('data-locale');
+      if (newLocale) {
+        const maxAge = 365 * 24 * 60 * 60;
+        document.cookie = `preferred_locale=${newLocale}; path=/; max-age=${maxAge}; SameSite=Lax`;
+      }
+    });
+  });
+</script>
+
+<style>
+  .language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .language-switcher:hover {
+    color: var(--color-fg);
+  }
+
+  .language-switcher span {
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .language-switcher .is-active {
+    color: var(--color-fg);
+  }
+
+  .language-switcher .separator {
+    color: var(--color-fg-subtle);
+  }
+</style>

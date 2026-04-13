@@ -1,0 +1,229 @@
+---
+import { getLocaleFromUrl, useTranslations, getLocalizedPath } from '../utils/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
+
+const navItems = [
+  { key: 'nav.experience', href: '#experience' },
+  { key: 'nav.education', href: '#education' },
+  { key: 'nav.skills', href: '#skills' },
+  { key: 'nav.contact', href: '#contact' },
+];
+---
+
+<header class="header" id="main-header">
+  <div class="container header-inner">
+    <a href={getLocalizedPath('/', locale)} class="logo">DE</a>
+
+    <nav class="nav-desktop" aria-label="Main navigation">
+      {navItems.map((item) => (
+        <a href={item.href} class="nav-link">
+          {t(item.key)}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <slot name="language-switcher" />
+    </div>
+
+    <button
+      class="mobile-menu-toggle"
+      id="mobile-menu-toggle"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    {navItems.map((item) => (
+      <a href={item.href} class="nav-link">
+        {t(item.key)}
+      </a>
+    ))}
+    <slot name="language-switcher" />
+  </nav>
+</header>
+
+<script>
+  const header = document.getElementById('main-header');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+
+    if (currentScroll > 50) {
+      header?.classList.add('is-scrolled');
+    } else {
+      header?.classList.remove('is-scrolled');
+    }
+
+    lastScroll = currentScroll;
+  }, { passive: true });
+</script>
+
+<style>
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    z-index: 100;
+    transition:
+      background var(--duration-normal) var(--ease-out),
+      backdrop-filter var(--duration-normal) var(--ease-out),
+      border-color var(--duration-normal) var(--ease-out),
+      box-shadow var(--duration-normal) var(--ease-out);
+  }
+
+  .header.is-scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    border-bottom-color: var(--color-border);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .logo {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--color-fg);
+  }
+
+  .nav-desktop {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .nav-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-fg);
+    text-decoration: none;
+    opacity: 0.6;
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-fg);
+    transition: width var(--duration-normal) var(--ease-out);
+  }
+
+  .nav-link:hover {
+    opacity: 1;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-fg);
+    opacity: 0.7;
+    transition: opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .language-switcher:hover {
+    opacity: 1;
+  }
+
+  .language-switcher .is-active {
+    opacity: 1;
+  }
+
+  .language-switcher .separator {
+    color: var(--color-fg-subtle);
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--space-sm);
+    cursor: pointer;
+  }
+
+  .mobile-menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--color-fg);
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+    z-index: 99;
+  }
+
+  .mobile-nav.is-open {
+    display: flex;
+  }
+
+  .mobile-nav .nav-link {
+    font-size: var(--text-lg);
+    opacity: 1;
+    padding: var(--space-sm) 0;
+  }
+
+  @media (max-width: 768px) {
+    .nav-desktop {
+      display: none;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+    }
+  }
+</style>

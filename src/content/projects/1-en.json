@@ -1,0 +1,8 @@
+{
+  "title": "CloudDash",
+  "description": "Real-time cloud infrastructure monitoring dashboard with WebSocket-based live updates, interactive charts, and customizable alerts. Supports AWS, GCP, and Cloudflare metrics aggregation.",
+  "tech": ["TypeScript", "React", "Node.js", "Redis", "PostgreSQL", "Docker"],
+  "githubUrl": "https://github.com/yourusername/clouddash",
+  "liveUrl": "https://clouddash.example.com",
+  "featured": true
+}

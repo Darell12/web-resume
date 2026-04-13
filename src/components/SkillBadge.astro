@@ -1,0 +1,66 @@
+---
+interface Props {
+  name: string;
+  level?: 'basic' | 'intermediate' | 'advanced' | 'expert';
+  category?: string;
+}
+
+const { name, level, category } = Astro.props;
+
+const levelColors: Record<string, string> = {
+  basic: '#e5e5e5',
+  intermediate: '#a3a3a3',
+  advanced: '#525252',
+  expert: '#0a0a0a',
+};
+---
+
+<div class="skill-badge">
+  <span class="skill-name">{name}</span>
+  {level && (
+    <div class="skill-level" title={`Proficiency: ${level}`}>
+      <div
+        class="skill-level-bar"
+        style={`width: ${level === 'expert' ? 100 : level === 'advanced' ? 75 : level === 'intermediate' ? 50 : 25}%`}
+        data-level={level}
+      ></div>
+    </div>
+  )}
+</div>
+
+<style>
+  .skill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-sm);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    transition: border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .skill-badge:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  .skill-name {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .skill-level {
+    width: 48px;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .skill-level-bar {
+    height: 100%;
+    background: var(--color-fg);
+    border-radius: 2px;
+    transition: width var(--duration-normal) var(--ease-out);
+  }
+</style>

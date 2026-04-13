@@ -1,0 +1,11 @@
+{
+  "company": "Mangus S.A.S",
+  "role": "QA/Tester",
+  "startDate": "2021-01",
+  "endDate": "2023-01",
+  "description": [
+    "Aseguré la estabilidad del producto mediante pruebas rigurosas, reduciendo errores en producción.",
+    "Actué como enlace técnico entre soporte y desarrollo para refinar requerimientos y reducir el retrabajo."
+  ],
+  "tech": ["Testing", "QA", "Bug Tracking"]
+}

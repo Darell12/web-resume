@@ -1,0 +1,116 @@
+---
+import { getLocaleFromUrl } from '../utils/i18n';
+
+interface Props {
+  company: string;
+  role: string;
+  startDate: string;
+  endDate?: string;
+  description: string[];
+  tech?: string[];
+}
+
+const locale = getLocaleFromUrl(Astro.url);
+const { company, role, startDate, endDate, description, tech } = Astro.props;
+
+function formatDate(dateStr: string): string {
+  const [year, month] = dateStr.split('-');
+  const date = new Date(parseInt(year), parseInt(month) - 1);
+  return date.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', { month: 'short', year: 'numeric' });
+}
+
+const endDateLabel = locale === 'es' ? 'Presente' : 'Present';
+const endDateDisplay = !endDate || endDate === 'present' ? endDateLabel : formatDate(endDate);
+---
+
+<article class="experience-card card">
+  <div class="card-header">
+    <div class="card-title-group">
+      <h3 class="card-title">{role}</h3>
+      <span class="card-subtitle">{company}</span>
+    </div>
+    <time class="card-date">
+      {formatDate(startDate)} — {endDateDisplay}
+    </time>
+  </div>
+
+  <ul class="card-list">
+    {description.map((item) => (
+      <li>{item}</li>
+    ))}
+  </ul>
+
+  {tech && tech.length > 0 && (
+    <div class="card-tags">
+      {tech.map((item) => (
+        <span class="badge">{item}</span>
+      ))}
+    </div>
+  )}
+</article>
+
+<style>
+  .experience-card {
+    margin-bottom: var(--space-lg);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .card-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-xs);
+  }
+
+  .card-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .card-date {
+    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    color: var(--color-fg-muted);
+    white-space: nowrap;
+  }
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .card-list li {
+    font-size: var(--text-sm);
+    line-height: 1.7;
+    color: var(--color-fg-muted);
+    padding-left: var(--space-md);
+    position: relative;
+  }
+
+  .card-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--color-fg-subtle);
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  @media (max-width: 768px) {
+    .card-header {
+      flex-direction: column;
+    }
+  }
+</style>
