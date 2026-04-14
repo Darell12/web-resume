@@ -296,6 +296,23 @@ const navItems = [
 
   .mobile-nav.is-open {
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: calc(100vh - var(--header-height));
+    overflow-y: auto;
+    background: var(--color-bg);
+  }
+
+  @supports (backdrop-filter: blur(16px)) {
+    .mobile-nav.is-open {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    }
+
+    [data-theme="dark"] .mobile-nav.is-open {
+      background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    }
   }
 
   .mobile-nav .nav-link {
