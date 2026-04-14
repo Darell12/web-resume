@@ -15,28 +15,61 @@ interface Props {
 
 const { skills } = Astro.props;
 
-const levelOrder = { expert: 0, advanced: 1, intermediate: 2, basic: 3 };
-
-const levelBars: Record<string, number> = {
-  expert: 5,
-  advanced: 4,
-  intermediate: 3,
-  basic: 2,
+// SVG icon URLs from Devicon CDN
+const deviconUrls: Record<string, string> = {
+  'TypeScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
+  'JavaScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+  'React': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+  'Astro': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/astro/astro-original.svg',
+  'Node.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+  'Python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+  'AWS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
+  'Docker': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+  'Docker Compose': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+  'PostgreSQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg',
+  'MongoDB': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
+  'MySQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+  'Git': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg',
+  'GitHub': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+  'GitHub Actions': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+  'GraphQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg',
+  'HTML': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+  'CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
+  'Tailwind': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg',
+  'Figma': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
+  'Linux': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg',
+  'Terraform': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg',
+  'Cloudflare': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cloudflare/cloudflare-original.svg',
+  'Next.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg',
+  'Vue': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg',
+  'Go': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg',
+  'Rust': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg',
+  'Kubernetes': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg',
+  'GCP': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg',
+  'Postman': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg',
+  'VSCode': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg',
+  'Vim': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vim/vim-original.svg',
+  'Angular': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angular/angular-original.svg',
+  'NestJS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-original.svg',
+  'PHP': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg',
+  'CodeIgniter': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/codeigniter/codeigniter-plain.svg',
+  'Lambda': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
 };
 
-const levelLabels: Record<string, Record<string, string>> = {
-  en: { expert: 'Expert', advanced: 'Advanced', intermediate: 'Intermediate', basic: 'Basic' },
-  es: { expert: 'Experto', advanced: 'Avanzado', intermediate: 'Intermedio', basic: 'Básico' },
+const getIconUrl = (techName: string) => {
+  return deviconUrls[techName] || null;
 };
 
+// Keep existing category labels
 const categoryLabels: Record<string, Record<string, string>> = {
   en: {
-    'Languages': 'Languages',
+    'Languages': 'Languages & Frameworks',
     'Databases': 'Databases',
     'Tools & Cloud': 'Tools & Cloud',
+    'Idiomas': 'Languages',
   },
   es: {
-    'Lenguajes': 'Lenguajes',
+    'Languages': 'Lenguajes y Frameworks',
     'Bases de Datos': 'Bases de Datos',
     'Herramientas y Cloud': 'Herramientas y Cloud',
     'Idiomas': 'Idiomas',
@@ -51,17 +84,8 @@ const grouped = skills.reduce((acc, skill) => {
   return acc;
 }, {} as Record<string, Skill[]>);
 
-// Sort skills within each group by level
-Object.values(grouped).forEach(group => {
-  group.sort((a, b) => (levelOrder[a.level || 'basic'] ?? 4) - (levelOrder[b.level || 'basic'] ?? 4));
-});
-
-// Sort groups by their highest skill level
-const sortedCategories = Object.entries(grouped).sort(([, a], [, b]) => {
-  const minLevelA = Math.min(...a.map(s => levelOrder[s.level || 'basic'] ?? 4));
-  const minLevelB = Math.min(...b.map(s => levelOrder[s.level || 'basic'] ?? 4));
-  return minLevelA - minLevelB;
-});
+// Sort groups by category name for consistent order
+const sortedCategories = Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
 
 const t = (cat: string) => categoryLabels[locale]?.[cat] || cat;
 ---
@@ -70,33 +94,18 @@ const t = (cat: string) => categoryLabels[locale]?.[cat] || cat;
   {sortedCategories.map(([category, categorySkills], groupIdx) => (
     <div class="skill-category" data-animate data-stagger={groupIdx * 80}>
       <h3 class="category-title">{t(category)}</h3>
-      <div class="skill-grid">
-        {categorySkills.map((skill, idx) => (
-          <div
-            class="skill-card"
-            data-animate
-            data-stagger={idx * 40}
-          >
-            <div class="skill-header">
-              <span class="skill-name">{skill.name}</span>
-              {skill.level && (
-                <span class="skill-level-badge">
-                  {levelLabels[locale]?.[skill.level] || skill.level}
-                </span>
+      <div class="skill-list">
+        {categorySkills.map((skill) => {
+          const iconUrl = getIconUrl(skill.name);
+          return (
+            <div class="skill-tag" data-animate>
+              {iconUrl && (
+                <img src={iconUrl} alt={skill.name} class="skill-icon" loading="lazy" />
               )}
+              <span class="skill-name">{skill.name}</span>
             </div>
-            {skill.level && (
-              <div class="skill-bar" title={`${skill.name}: ${skill.level}`}>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <span
-                    class={`bar-segment ${i <= levelBars[skill.level!] ? 'is-filled' : ''}`}
-                    style={`--bar-delay: ${(i - 1) * 40}ms`}
-                  ></span>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   ))}
@@ -134,21 +143,26 @@ const t = (cat: string) => categoryLabels[locale]?.[cat] || cat;
     display: inline-block;
   }
 
-  .skill-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--space-md);
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
   }
 
-  .skill-card {
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    padding: var(--space-md);
-    display: flex;
-    flex-direction: column;
+  .skill-tag {
+    display: inline-flex;
+    align-items: center;
     gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+    cursor: default;
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
     transition:
       opacity var(--duration-slow) var(--ease-out),
       transform var(--duration-slow) var(--ease-out),
@@ -157,76 +171,40 @@ const t = (cat: string) => categoryLabels[locale]?.[cat] || cat;
     transition-delay: var(--stagger-delay, 0ms);
   }
 
-  .skill-card.is-visible {
+  .skill-tag.is-visible {
     opacity: 1;
     transform: translateY(0);
   }
 
-  .skill-card:hover {
+  .skill-tag:hover {
     border-color: var(--color-border-strong);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
   }
 
-  .skill-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-sm);
+  .skill-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
   }
 
   .skill-name {
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--color-fg);
   }
 
-  .skill-level-badge {
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-fg-muted);
-    background: var(--color-bg-alt);
-    padding: 2px 6px;
-    border: 1px solid var(--color-border);
-    white-space: nowrap;
-  }
-
-  .skill-bar {
-    display: flex;
-    gap: 3px;
-    margin-top: auto;
-  }
-
-  .bar-segment {
-    flex: 1;
-    height: 4px;
-    background: var(--color-border);
-    border-radius: 1px;
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform var(--duration-normal) var(--ease-out);
-    transition-delay: var(--bar-delay, 0ms);
-  }
-
-  .skill-card.is-visible .bar-segment.is-filled {
-    background: var(--color-fg);
-    transform: scaleX(1);
-  }
-
-  .skill-card.is-visible .bar-segment:not(.is-filled) {
-    transform: scaleX(1);
-  }
-
   @media (max-width: 640px) {
-    .skill-grid {
-      grid-template-columns: repeat(2, 1fr);
+    .skill-list {
+      gap: var(--space-xs);
     }
-  }
 
-  @media (max-width: 400px) {
-    .skill-grid {
-      grid-template-columns: 1fr;
+    .skill-tag {
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    .skill-tag i {
+      font-size: 16px;
     }
   }
 </style>
