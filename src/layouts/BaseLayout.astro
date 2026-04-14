@@ -14,7 +14,7 @@ interface Props {
 const {
   title = SITE.name,
   description = SITE.description,
-  ogImage = '/og-image.png',
+  ogImage = '/og-image.svg',
   canonicalUrl = Astro.url.href,
 } = Astro.props;
 
@@ -28,7 +28,10 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
 
     <script is:inline>
       (function() {
@@ -63,6 +66,27 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
         imageAlt: SITE.name,
       }}
     />
+
+    <!-- hreflang for i18n -->
+    <link rel="alternate" hreflang="en" href={`${SITE.domain}/en/`} />
+    <link rel="alternate" hreflang="es" href={`${SITE.domain}/es/`} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE.domain}/`} />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": SITE.name,
+      "jobTitle": SITE.title,
+      "email": SITE.email,
+      "url": `https://${SITE.domain}`,
+      "sameAs": [
+        SITE.github,
+        SITE.linkedin
+      ],
+      "knowsAbout": ["Software Development", "Web Applications", "Mobile Applications"],
+      "inLanguage": locale === 'en' ? "en-US" : "es-ES"
+    })} />
 
     <script is:inline>
       // Intersection Observer for scroll animations
