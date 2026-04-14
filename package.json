@@ -10,9 +10,11 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.3.0",
     "astro": "^6.0.5",
     "astro-seo": "^1.1.0",
-    "@astrojs/sitemap": "^3.3.0"
+    "devicon": "^2.17.0",
+    "simple-icons": "^16.16.0"
   },
   "devDependencies": {
     "typescript": "^6.0.2"

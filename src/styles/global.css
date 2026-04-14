@@ -53,6 +53,8 @@
   /* Layout */
   --max-width: 1200px;
   --header-height: 80px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
 }
 
 /* Dark Mode */
@@ -130,6 +132,43 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+}
+
+/* ================================================
+   Skip Link (Accessibility)
+   ================================================ */
+
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: var(--space-md);
+  z-index: 9999;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-bg);
+  background: var(--color-fg);
+  border-radius: var(--radius-md);
+  transition: top var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus {
+  top: var(--space-md);
+  outline: 2px solid var(--color-fg);
+  outline-offset: 2px;
+}
+
+/* ================================================
+   Focus Visible (Accessibility)
+   ================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ================================================

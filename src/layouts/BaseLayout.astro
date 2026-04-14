@@ -27,9 +27,20 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Preconnect to external origins for performance -->
+    <link rel="preconnect" href="https://github.com" />
+    <link rel="preconnect" href="https://linkedin.com" />
+    <link rel="dns-prefetch" href="https://github.com" />
+    <link rel="dns-prefetch" href="https://linkedin.com" />
+
+    <!-- Preload OG image for better LCP -->
+    <link rel="preload" as="image" href={ogImage} />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg" />
-    <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
 
@@ -72,20 +83,49 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
     <link rel="alternate" hreflang="es" href={`${SITE.domain}/es/`} />
     <link rel="alternate" hreflang="x-default" href={`${SITE.domain}/`} />
 
-    <!-- Schema.org JSON-LD -->
+    <!-- SEO: Keywords -->
+    <meta name="keywords" content="Software Developer, Web Developer, Mobile Developer, Frontend, Backend, JavaScript, TypeScript, React, Astro, Node.js, Colombia" />
+
+    <!-- Schema.org JSON-LD: Person + BreadcrumbList -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Person",
       "name": SITE.name,
       "jobTitle": SITE.title,
+      "description": SITE.description,
       "email": SITE.email,
       "url": `https://${SITE.domain}`,
+      "image": `/og-image.svg`,
       "sameAs": [
         SITE.github,
         SITE.linkedin
       ],
       "knowsAbout": ["Software Development", "Web Applications", "Mobile Applications"],
-      "inLanguage": locale === 'en' ? "en-US" : "es-ES"
+      "inLanguage": locale === 'en' ? "en-US" : "es-ES",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": canonicalUrl
+      }
+    })} />
+
+    <!-- BreadcrumbList Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": locale === 'en' ? "Home" : "Inicio",
+          "item": `https://${SITE.domain}`
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": locale === 'en' ? "Resume" : "Currículum",
+          "item": canonicalUrl
+        }
+      ]
     })} />
 
     <script is:inline>
@@ -138,6 +178,7 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
 
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <slot name="header" />
     <slot />
   </body>

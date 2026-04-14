@@ -27,6 +27,9 @@ export function useTranslations(locale: Locale) {
         'contact.github': 'GitHub',
         'contact.linkedin': 'LinkedIn',
         'footer.copyright': 'All rights reserved.',
+        'nav.home': 'Go Home',
+        'seo.pageNotFound': 'Page Not Found',
+        'seo.pageNotFoundDesc': "Looks like this page doesn't exist. Let's get you back on track.",
       },
       es: {
         'nav.experience': 'Experiencia',
@@ -46,6 +49,9 @@ export function useTranslations(locale: Locale) {
         'contact.github': 'GitHub',
         'contact.linkedin': 'LinkedIn',
         'footer.copyright': 'Todos los derechos reservados.',
+        'nav.home': 'Volver al inicio',
+        'seo.pageNotFound': 'Página no encontrada',
+        'seo.pageNotFoundDesc': 'Esta página no existe. Te llevo de vuelta a casa.',
       },
     };
     return translations[locale][key] ?? key;
