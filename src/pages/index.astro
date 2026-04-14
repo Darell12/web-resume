@@ -36,10 +36,10 @@ import '../styles/global.css';
         const targetLocale = savedLocale || (isHispanicLocale(getBrowserLocale()) ? 'es' : 'en');
 
         if (savedLocale) {
-          window.location.replace('/' + (savedLocale === 'es' ? 'es/' : ''));
+          window.location.replace('/' + savedLocale + '/');
         } else {
           setCookie(COOKIE_NAME, targetLocale, COOKIE_MAX_AGE);
-          window.location.replace('/' + (targetLocale === 'es' ? 'es/' : ''));
+          window.location.replace('/' + targetLocale + '/');
         }
       })();
     </script>

@@ -11,7 +11,7 @@ const currentPath = Astro.url.pathname;
 function getOtherLocalePath(path: string, newLocale: string): string {
   const cleanPath = path.replace(/^\/(en|es)/, '');
   if (newLocale === 'en') {
-    return cleanPath || '/';
+    return '/en' + cleanPath;
   }
   return `/es${cleanPath}`;
 }
