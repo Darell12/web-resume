@@ -28,6 +28,7 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <!-- Preconnect to external origins for performance -->
     <link rel="preconnect" href="https://github.com" />
