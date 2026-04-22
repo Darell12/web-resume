@@ -1,8 +1,0 @@
-{
-  "title": "TaskSync",
-  "description": "Aplicación colaborativa de gestión de tareas con arquitectura offline-first, sincronización en tiempo real via CRDTs y edición concurrente sin conflictos. Construida para equipos de 10-100 usuarios.",
-  "tech": ["TypeScript", "Next.js", "Prisma", "PostgreSQL", "Vercel"],
-  "githubUrl": "https://github.com/yourusername/tasksync",
-  "liveUrl": "https://tasksync.example.com",
-  "featured": true
-}

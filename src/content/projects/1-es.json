@@ -1,8 +1,8 @@
 {
-  "title": "CloudDash",
-  "description": "Dashboard de monitoreo de infraestructura en la nube con actualizaciones en tiempo real via WebSocket, gráficos interactivos y alertas personalizables. Soporta métricas de AWS, GCP y Cloudflare.",
-  "tech": ["TypeScript", "React", "Node.js", "Redis", "PostgreSQL", "Docker"],
-  "githubUrl": "https://github.com/yourusername/clouddash",
-  "liveUrl": "https://clouddash.example.com",
+  "title": "Dev Edge Blog",
+  "description": "Blog técnico sobre desarrollo web, edge computing y frameworks modernos de JavaScript. Construido con Astro y desplegado en Cloudflare Pages para rendimiento óptimo. Incluye soporte i18n y optimización SEO.",
+  "tech": ["Astro", "TypeScript", "Cloudflare Pages", "MDX"],
+  "githubUrl": "https://github.com/Darell12/dev-edge-blog",
+  "liveUrl": "https://blog.darell.co",
   "featured": true
 }
